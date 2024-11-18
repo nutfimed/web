@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .comentarios {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .comentarios h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .comentarios form {
+            margin-bottom: 20px;
+        }
+        .comentarios textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .comentarios input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .comentarios input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .comentarios .comentario {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .comentarios .comentario p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="comentarios">
+    <h2>Comentarios</h2>
+
+    <!-- Formulario para enviar un comentario -->
+    <form action="procesar_comentario.php" method="POST">
+        <textarea name="comentario" placeholder="Escribe tu comentario aquí..." required></textarea>
+        <br>
+        <input type="submit" value="Enviar Comentario">
+    </form>
+
+    <!-- Lista de comentarios -->
+    <div id="comentarios_lista">
+        <!-- Aquí se mostrarán los comentarios que se recuperen del servidor -->
+        <?php
+        // Llamada a la base de datos y mostrar los comentarios recientes (suponiendo que ya tienes una base de datos configurada)
+        // Este es solo un ejemplo básico
+        $conexion = new mysqli("localhost", "usuario", "contraseña", "base_de_datos");
+
+        if ($conexion->connect_error) {
+            die("Conexión fallida: " . $conexion->connect_error);
+        }
+
+        $consulta = "SELECT comentario, fecha FROM comentarios ORDER BY fecha DESC LIMIT 5";
+        $result = $conexion->query($consulta);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<div class='comentario'>";
+                echo "<p><strong>Comentario:</strong> " . htmlspecialchars($row['comentario']) . "</p>";
+                echo "<p><em>Publicado el: " . $row['fecha'] . "</em></p>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p>No hay comentarios aún.</p>";
+        }
+
+        $conexion->close();
+        ?>
+    </div>
+</div>
+
+</body>
+</html>
